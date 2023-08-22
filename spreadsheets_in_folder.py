@@ -1,15 +1,19 @@
-def spreadsheets_in_folder():
+def spreadsheets_in_folder(folder):
     """
     Function that scans the given directory and returns a list with the names of .xls, .xlsx and .csv files inside
     Taken that list, it will create the dictionary with spreadsheet name as a key, and values being lists of sheets inside
     For .csv files, it will be only a list with one item "Data", since .csv files don't have multiple sheets
+
+    Example:
+    >>> a = spreadsheets_in_folder()
+    >>> print(a)
+    {'ANSYS120mm2Copper_Profile.xls': ['Cable selection and operating parameters', 'Derating', 'Temperature - time', 'Voltage drop - time'], 'Input.xlsx': ['0.5mm2', '10mm2', '120mm2'], 'Template.xlsx': ['Case1', 'Case2']}
     """
     import os
     import xlrd
     import openpyxl
 
-    # Change this to the desired directory
-    folder = "D:\Python_Projects\PSS-curves\Inputs"
+    # Define the extensions
     extensions = (".xls", ".xlsx", ".csv")
 
     # Get all files from the directory
