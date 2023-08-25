@@ -1,6 +1,34 @@
 def PSS_data():
     """
     This function takes PSS output .xls files from the Input folder and exctracts data suitable to be used with curve fitting script
+
+    Example:
+    >>> a, b = PSS_data()
+    >>> print(a['ANSYS10mm2Copper_20230811_2305 - Copy.xls'], "\n", b['ANSYS10mm2Copper_20230811_2305 - Copy.xls'])
+                             0                   1
+    0    Nominal cross section                  10
+    1              Part number  ANSYS 10mm2 Copper
+    2      Insulation material                 PVC
+    3            Core diameter                3.57
+    4           Outer diameter                3.57
+    5           Filling factor               0.498
+    6      Ambient temperature                20.0
+    7        Operating current             155.000
+    8  Voltage drop per length              1.3272      
+          Current [A]  Temperature [degC]
+    0            0.0               20.00
+    1            0.2               20.00
+    2            0.3               20.00
+    3            0.5               20.01
+    4            0.6               20.01
+    ..           ...                 ...
+    995        154.4              403.17
+    996        154.5              403.90
+    997        154.7              404.64
+    998        154.8              405.38
+    999        155.0              406.11
+
+    [1000 rows x 2 columns]
     """
     import os
     import pandas as pd
@@ -34,23 +62,23 @@ def PSS_data():
         # print(key)
         df.drop(rows_to_del, inplace=True)      # deletes obsolete rows
         df.reset_index(drop=True, inplace=True)     # resets index
+
+        # Remove the mm² from "Nominal cross section"
+        df.loc[df[0] == "Nominal cross section", 1] = (
+        df.loc[df[0] == "Nominal cross section", 1].str.replace(" mm²", "").astype(int))
         # print(Cable_info[key])
         # print("-" * 50)  # Optional line separator
 
     # Clean Current vs Temp data
     for key,df in Temp_v_Current.items():
-        print(key)
+        # print(key)
         df.columns = ['Current [A]','Temperature [degC]']       # assigns the headers 
         df.iloc[:, 0] = df.iloc[:, 0].round(1)      # rounds the values in the Current column to one decimal place
         df.iloc[:, 1] = df.iloc[:, 1].round(2)      # rounds the values in the Temperature column to two decimal places
-        print(Temp_v_Current[key])
-        print("-" * 50)     # Optional line separator
+        # print(Temp_v_Current[key])
+        # print("-" * 50)     # Optional line separator
 
-    # Now we will get to simplifying the data points
+    return Cable_info, Temp_v_Current
 
-    # print(Cable_info['ANSYS10mm2Copper_20230811_2305 - Copy.xls'])
-    # print(Cable_info['ANSYS10mm2Copper_20230811_2305 - Copy.xls'])
-
-    return
-
-PSS_data()
+a, b = PSS_data()
+print(a['ANSYS10mm2Copper_20230811_2305 - Copy.xls'], "\n", b['ANSYS10mm2Copper_20230811_2305 - Copy.xls'])
