@@ -64,9 +64,9 @@ def PSS_data():
     # Clean cable info data
     rows_to_del = [0, 1, 4, 6, 10, 12] + list(range(14, 19)) + list(range(20, 34))
     for key,df in Cable_info.items():
-        # print(key)
-        df.drop(rows_to_del, inplace=True)      # deletes obsolete rows
-        df.reset_index(drop=True, inplace=True)     # resets index
+        
+        df.drop(rows_to_del, inplace=True)      # delete obsolete rows
+        df.reset_index(drop=True, inplace=True)     # reset index
 
         # Remove the mm² from "Nominal cross section"
         df.loc[df[0] == "Nominal cross section", 1] = (
@@ -74,13 +74,19 @@ def PSS_data():
         # print(Cable_info[key])
         # print("-" * 50)  # Optional line separator
 
-        # Compact name:
+        # Compact name
         Cable_size = df[1][0]
         Fill_factor = df[1][5]
         Insulation_material = df[1][2]
         Insulation_thickness = float(df[1][4])-float(df[1][3])
         Ambient_temperature = df[1][6]
         Name = "{}mm2_{}fill_{}_{}_thick_{}ambient".format(Cable_size,Fill_factor,Insulation_material,Insulation_thickness,Ambient_temperature)
+
+        # Add the name at the top of Cable_info
+        Name_row = pd.DataFrame({0:['Name'], 1:[Name]})
+        df = pd.concat([Name_row, df], ignore_index=True)
+
+        Cable_info[key] = df
 
     # Clean Current vs Temp data
     for key,df in Temp_v_Current.items():
@@ -91,7 +97,4 @@ def PSS_data():
         # print(Temp_v_Current[key])
         # print("-" * 50)     # Optional line separator
         
-    return Name, Temp_v_Current, Cable_info
-
-a, b, c = PSS_data()
-print("\n", a, "\n\n", b['ANSYS10mm2Copper_20230811_2305 - Copy.xls'], "\n\n", c['ANSYS10mm2Copper_20230811_2305 - Copy.xls'])
+    return Temp_v_Current, Cable_info
