@@ -1,7 +1,32 @@
 def PSS_report():
     """
-    Using the data processed by PSS_data.py, this script is creating an .xlsx report with separate worksheets, and everything gathered in one place
+    Generates an Excel report from processed PSS data.
+
+    This function retrieves data processed by PSS_data and compiles it 
+    into an Excel report. The report contains separate worksheets for each 
+    cable info and temperature-vs-current dataset. Each worksheet is named 
+    after the specific cable's name.
+
+    The report format is as follows:
+    - Columns A and B: Temperature-vs-Current data.
+    - Columns C and D: Cable-specific info.
+    - Each sheet's name corresponds to the "Name" field in the Cable_info.
+
+    The generated report is saved in the "Outputs" directory with a timestamp 
+    in its filename, e.g., 'Report_2023-08-21_15-30-45.xlsx'.
+
+    Dependencies:
+        - `PSS_data`: Must be available in the same environment.
+        - Modules: os, pandas, datetime
+
+    Returns:
+    None. The function saves the report directly to disk.
+
+    Example usage:
+    >>> PSS_report()
+    (A new Excel file is saved in the designated "Outputs" directory.)
     """
+    
     import os
     import pandas as pd
     from datetime import datetime
@@ -14,30 +39,35 @@ def PSS_report():
     Date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     File_name = os.path.join(Output_dir, ('Report_{}.xlsx'.format(Date_time)))
 
-    # for file in Temp_v_Current:
-    #     compelte_data = pd.concat(Temp_v_Current[file],Cable_info[file],axis=1)
+    # Set up the Excel writer object
+    with pd.ExcelWriter(File_name, engine='xlsxwriter') as writer:
 
+        # Loop over each key
+        for key in Cable_info:
+            # Extract data frames
+            cable_df = Cable_info[key]
+            temp_current_df = Temp_v_Current[key]
+            sheet_name = Cable_info[key].iloc[0,1]
+            
+            # Concatenate side by side, column-wise
+            combined_df = pd.concat([temp_current_df, cable_df], axis=1)
 
-    # # Alternative: Set up the writer object:
-    # writer = pd.ExcelWriter(File_name, engine='openpyxl')
+            # Write the complete data frame to new sheet in the Excel file
+            combined_df.to_excel(writer, sheet_name=sheet_name, index=False)
 
-    # for sheet in Temp_v_Current:
-    #     sheet_name = Cable_info[sheet].loc[0,1]
+            # Access the XlsxWriter workbook and worksheet objects to adjust column width.
+            workbook  = writer.book
+            worksheet = writer.sheets[sheet_name]
 
+            # Iterate over the columns and adjust the width based on the max length in each column.
+            for idx, col in enumerate(combined_df):  # track column index and its content
+                series = combined_df[col]
+                max_len = max((
+                    series.astype(str).map(len).max(),  # max content length
+                    len(str(series.name))  # length of column name/header
+                    )) + 2  # adding a little extra space
+                worksheet.set_column(idx, idx, max_len)  # set column widt
 
-    #     # df.to_excel(writer, sheet_name=str(key))
-    #     # writer.save()
+    return
 
-
-
-
-
-    return Temp_v_Current, Cable_info
-
-# Temp_v_Current, Cable_info = PSS_report()
-# print("\n", Cable_info['ANSYS10mm2Copper_20230811_2305 - Copy.xls'], "\n\n", Temp_v_Current['ANSYS10mm2Copper_20230811_2305 - Copy.xls'])
-# print(Cable_info['ANSYS10mm2Copper_20230811_2305 - Copy.xls'].loc[0,1])
-
-a,b = PSS_report()
-print(a['ANSYS10mm2Copper_20230811_2305 - Copy.xls'], b['ANSYS10mm2Copper_20230811_2305 - Copy.xls'])
-print(b['ANSYS10mm2Copper_20230811_2305 - Copy.xls'].shape)
+PSS_report()

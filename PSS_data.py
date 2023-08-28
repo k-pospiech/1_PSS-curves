@@ -7,33 +7,33 @@ def PSS_data():
     >>> a, b, c = PSS_data()
     >>> print("\n", a, "\n\n", b['ANSYS10mm2Copper_20230811_2305 - Copy.xls'], "\n\n", c['ANSYS10mm2Copper_20230811_2305 - Copy.xls'])
  
-10mm2_0.498fill_PVC_0.0_thick_20.0ambient 
+    10mm2_0.498fill_PVC_0.0_thick_20.0ambient 
 
-      Current [A]  Temperature [degC]
-0            0.0               20.00
-1            0.2               20.00
-2            0.3               20.00
-3            0.5               20.01
-4            0.6               20.01
-..           ...                 ...
-995        154.4              403.17
-996        154.5              403.90
-997        154.7              404.64
-998        154.8              405.38
-999        155.0              406.11
+        Current [A]  Temperature [degC]
+    0            0.0               20.00
+    1            0.2               20.00
+    2            0.3               20.00
+    3            0.5               20.01
+    4            0.6               20.01
+    ..           ...                 ...
+    995        154.4              403.17
+    996        154.5              403.90
+    997        154.7              404.64
+    998        154.8              405.38
+    999        155.0              406.11
 
-[1000 rows x 2 columns]
+    [1000 rows x 2 columns]
 
-                          0                   1
-0    Nominal cross section                  10
-1              Part number  ANSYS 10mm2 Copper
-2      Insulation material                 PVC
-3            Core diameter                3.57
-4           Outer diameter                3.57
-5           Filling factor               0.498
-6      Ambient temperature                20.0
-7        Operating current             155.000
-8  Voltage drop per length              1.3272
+                            0                   1
+    0    Nominal cross section                  10
+    1              Part number  ANSYS 10mm2 Copper
+    2      Insulation material                 PVC
+    3            Core diameter                3.57
+    4           Outer diameter                3.57
+    5           Filling factor               0.498
+    6      Ambient temperature                20.0
+    7        Operating current             155.000
+    8  Voltage drop per length              1.3272
     """
     import os
     import pandas as pd
@@ -63,28 +63,30 @@ def PSS_data():
 
     # Clean cable info data
     rows_to_del = [0, 1, 4, 6, 10, 12] + list(range(14, 19)) + list(range(20, 34))
-    for key,df in Cable_info.items():
-        
+    for key, df in Cable_info.items():
+
         df.drop(rows_to_del, inplace=True)      # delete obsolete rows
         df.reset_index(drop=True, inplace=True)     # reset index
 
         # Remove the mm² from "Nominal cross section"
         df.loc[df[0] == "Nominal cross section", 1] = (
-        df.loc[df[0] == "Nominal cross section", 1].str.replace(" mm²", "").astype(int))
-        # print(Cable_info[key])
-        # print("-" * 50)  # Optional line separator
-
+            df.loc[df[0] == "Nominal cross section", 1].str.replace(" mm²", "").astype(int)
+        )
+        
         # Compact name
-        Cable_size = df[1][0]
-        Fill_factor = df[1][5]
-        Insulation_material = df[1][2]
-        Insulation_thickness = float(df[1][4])-float(df[1][3])
-        Ambient_temperature = df[1][6]
-        Name = "{}mm2_{}fill_{}_{}_thick_{}ambient".format(Cable_size,Fill_factor,Insulation_material,Insulation_thickness,Ambient_temperature)
+        Cable_size = df.iloc[0, 1]
+        Fill_factor = df.iloc[5, 1]
+        Insulation_material = df.iloc[2, 1]
+        Insulation_thickness = float(df.iloc[4, 1]) - float(df.iloc[3, 1])
+        # Ambient_temperature = df.iloc[6, 1]
+        Name = "{}mm2_{}fill_{}_{}_thick".format(Cable_size, Fill_factor, Insulation_material, Insulation_thickness)
 
         # Add the name at the top of Cable_info
-        Name_row = pd.DataFrame({0:['Name'], 1:[Name]})
+        Name_row = pd.DataFrame({0: ['Name'], 1: [Name]})
         df = pd.concat([Name_row, df], ignore_index=True)
+
+        # Rename columns after all operations are done
+        df.columns = ['Attribute', 'Value']
 
         Cable_info[key] = df
 
