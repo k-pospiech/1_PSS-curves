@@ -1,3 +1,9 @@
+import os
+import pandas as pd
+from datetime import datetime
+from PSS_data import PSS_data
+from format_excel import *
+
 def PSS_report():
     """
     Generates an Excel report from processed PSS data.
@@ -26,12 +32,6 @@ def PSS_report():
     >>> PSS_report()
     (A new Excel file is saved in the designated "Outputs" directory.)
     """
-    
-    import os
-    import pandas as pd
-    from datetime import datetime
-    from PSS_data import PSS_data
-
     Temp_v_Current, Cable_info = PSS_data()
     
     # Create new output file
@@ -55,18 +55,10 @@ def PSS_report():
             # Write the complete data frame to new sheet in the Excel file
             combined_df.to_excel(writer, sheet_name=sheet_name, index=False)
 
-            # Access the XlsxWriter workbook and worksheet objects to adjust column width.
-            workbook  = writer.book
-            worksheet = writer.sheets[sheet_name]
-
-            # Iterate over the columns and adjust the width based on the max length in each column.
-            for idx, col in enumerate(combined_df):  # track column index and its content
-                series = combined_df[col]
-                max_len = max((
-                    series.astype(str).map(len).max(),  # max content length
-                    len(str(series.name))  # length of column name/header
-                    )) + 2  # adding a little extra space
-                worksheet.set_column(idx, idx, max_len)  # set column widt
+    # Format the excel file (adjust columns width and rows height)
+    for sheet in Cable_info:
+        sheet_name = Cable_info[sheet].iloc[0,1]
+        format_excel(File_name, sheet_name)
 
     return
 
