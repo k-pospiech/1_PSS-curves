@@ -1,34 +1,53 @@
-"""
-This function returns the polynomial coefficients, and plots the curve based on the provided x and y data, 
-and the degree of polynomial that should be used (default 2nd degree)
-
-In the process, it will also ask for input to create the proper graph (accepts empty strings to skip labels completely).
-If any 4th argument is passed, it will skip the plotting step
-
-    Example without plot:
->>> import numpy as np
->>> x = np.linspace(0,10,20)
->>> y = 2*x**2 + 1 + np.random.normal(0,1,len(x))
->>> curve_fitting(x,y,2,0)
-
-Fitted Parameters:  [ 2.05971003 -0.59791269  2.08456956]
-f(x) =  2.0846x^2 - 0.5979x^1 + 2.0597
-
-    Example with plot:
->>> import numpy as np
->>> x = np.linspace(0,10,20)
->>> y = 2*x**2 + 1 + np.random.normal(0,1,len(x))
->>> curve_fitting(x,y,2)
-
-Fitted Parameters:  [ 2.00206363 -0.00772845  0.97363155]
-f(x) =  0.9736x^2 - 0.0077x^1 + 2.0021
-Title: Curve Fit
-X label: Current [A]
-Y label: Temperature [degC]
-    plus pop-up window with the described plot
-"""
-
 def curve_fitting(x, y, degree=2, graph="Y"):
+    """
+    Fits a polynomial curve to given x and y data, and optionally plots the curve.
+
+    This function takes in arrays of x and y coordinates, along with the desired degree of the polynomial 
+    for curve fitting (default is 2). It returns the coefficients of the fitted polynomial and prints the 
+    equation of the curve.
+
+    Optionally, the function can plot the data and the fitted curve. If a fourth argument is passed, 
+    plotting is skipped. Otherwise, the user is prompted to input labels for the plot's title, x-axis, 
+    and y-axis.
+
+    Parameters:
+    -----------
+    x : array-like
+        Array of x-coordinate values.
+    y : array-like
+        Array of y-coordinate values.
+    degree : int, optional
+        Degree of the polynomial curve to be fitted (default is 2).
+    graph : str, optional
+        Flag to control whether the plot should be displayed ("Y") or skipped (any other value).
+
+    Returns:
+    --------
+    None
+        The function prints the polynomial coefficients and optionally displays a plot.
+
+    Examples:
+    ---------
+    Without plot:
+    >>> import numpy as np
+    >>> x = np.linspace(0, 10, 20)
+    >>> y = 2*x**2 + 1 + np.random.normal(0, 1, len(x))
+    >>> curve_fitting(x, y, 2, 0)
+    Fitted Parameters: [2.0597, -0.5979, 2.0846]
+    f(x) = 2.0846x^2 - 0.5979x + 2.0597
+
+    With plot:
+    >>> import numpy as np
+    >>> x = np.linspace(0, 10, 20)
+    >>> y = 2*x**2 + 1 + np.random.normal(0, 1, len(x))
+    >>> curve_fitting(x, y, 2)
+    Fitted Parameters: [2.0021, -0.0077, 0.9736]
+    f(x) = 0.9736x^2 - 0.0077x + 2.0021
+    Title: Curve Fit
+    X label: Current [A]
+    Y label: Temperature [degC]
+    [Displays plot]
+    """
     import numpy as np
     import matplotlib.pyplot as plt
     from scipy.optimize import curve_fit

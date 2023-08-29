@@ -1,13 +1,28 @@
 def PSS_data():
     """
-    This function takes PSS output .xls files from the Input folder and exctracts data suitable to be used with curve fitting script
-    It returns string with compact name of the case, dictionary of temperature vs current, and dictionary of useful case data
+    Extracts and formats cable data from Excel files in a specified directory.
 
+    The function reads two tables from each Excel spreadsheet in the "Inputs" folder:
+    1. 'Cable selection and operating p': Information like nominal cross-section, part number, and material.
+    2. 'Temperature - current': Data about temperature at different current levels.
+    
+    It cleans and formats the extracted data and returns two dictionaries:
+    1. Temp_v_Current: Maps file names to their corresponding "Temperature - current" data as a DataFrame.
+    2. Cable_info: Maps file names to their corresponding "Cable selection and operating p" data as a DataFrame.
+    
+    Returns:
+    --------
+    Temp_v_Current : dict
+        A dictionary mapping the filenames to their corresponding "Temperature - current" data in a DataFrame format.
+        
+    Cable_info : dict
+        A dictionary mapping the filenames to their corresponding "Cable selection and operating p" data in a DataFrame format.
+        
     Example:
-    >>> a, b, c = PSS_data()
-    >>> print("\n", a, "\n\n", b['ANSYS10mm2Copper_20230811_2305 - Copy.xls'], "\n\n", c['ANSYS10mm2Copper_20230811_2305 - Copy.xls'])
- 
-    10mm2_0.498fill_PVC_0.0_thick_20.0ambient 
+    --------
+    >>> temp_data, cable_data = PSS_data()
+    >>> print("\n", temp_data['ExampleFile.xls'])
+    >>> print("\n", cable_data['ExampleFile.xls'])
 
         Current [A]  Temperature [degC]
     0            0.0               20.00

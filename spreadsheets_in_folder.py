@@ -1,13 +1,31 @@
 def spreadsheets_in_folder(folder):
     """
-    Function that scans the given directory and returns a list with the names of .xls, .xlsx and .csv files inside
-    Taken that list, it will create the dictionary with spreadsheet name as a key, and values being lists of sheets inside
-    For .csv files, it will be only a list with one item "Data", since .csv files don't have multiple sheets
+    Scans a given directory for spreadsheet files (.xls, .xlsx, .csv) and lists their worksheet names.
+    
+    This function scans the given folder for spreadsheet files with .xls, .xlsx, and .csv extensions.
+    For each detected spreadsheet, the function lists its worksheets' names.
+    For .csv files, which do not have multiple sheets, it assigns a default sheet name "Data".
+
+    Parameters:
+    -----------
+    folder : str
+        The path of the folder to scan for spreadsheet files.
+
+    Returns:
+    --------
+    worksheets : dict
+        A dictionary where keys are the names of the detected spreadsheets, and the values are lists containing 
+        the names of the worksheets within each spreadsheet.
 
     Example:
-    >>> a = spreadsheets_in_folder()
-    >>> print(a)
-    {'ANSYS120mm2Copper_Profile.xls': ['Cable selection and operating parameters', 'Derating', 'Temperature - time', 'Voltage drop - time'], 'Input.xlsx': ['0.5mm2', '10mm2', '120mm2'], 'Template.xlsx': ['Case1', 'Case2']}
+    --------
+    >>> worksheets_dict = spreadsheets_in_folder("path/to/your/folder")
+    >>> print(worksheets_dict)
+    {
+        'ANSYS120mm2Copper_Profile.xls': ['Cable selection and operating parameters', 'Derating', 'Temperature - time', 'Voltage drop - time'], 
+        'Input.xlsx': ['0.5mm2', '10mm2', '120mm2'], 
+        'Template.xlsx': ['Case1', 'Case2']
+    }
     """
     import os
     import xlrd
