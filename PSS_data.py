@@ -92,7 +92,7 @@ def PSS_data():
         Cable_size = df.iloc[0, 1]
         Fill_factor = df.iloc[5, 1]
         Insulation_material = df.iloc[2, 1]
-        Insulation_thickness = round(float(df.iloc[4, 1]) - float(df.iloc[3, 1]),2)
+        Insulation_thickness = round((float(df.iloc[4, 1]) - float(df.iloc[3, 1]))/2,2)
         # Ambient_temperature = df.iloc[6, 1]
         Name = "{}mm2_{}fill_{}_{}_thick".format(Cable_size, Fill_factor, Insulation_material, Insulation_thickness)
 
@@ -109,7 +109,7 @@ def PSS_data():
     for key,df in Temp_v_Current.items():
         # print(key)
         df.columns = ['Current [A]','Temperature [degC]']       # assigns the headers 
-        df.iloc[:, 0] = df.iloc[:, 0].round(1)      # rounds the values in the Current column to one decimal place
+        df.iloc[:, 0] = df.iloc[:, 0].round(4)      # rounds the values in the Current column to four decimal place
         df.iloc[:, 1] = df.iloc[:, 1].round(2)      # rounds the values in the Temperature column to two decimal places
         # print(Temp_v_Current[key])
         # print("-" * 50)     # Optional line separator
