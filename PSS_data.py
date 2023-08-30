@@ -16,7 +16,7 @@ def PSS_data():
         A dictionary mapping the filenames to their corresponding "Temperature - current" data in a DataFrame format.
         
     Cable_info : dict
-        A dictionary mapping the filenames to their corresponding "Cable selection and operating p" data in a DataFrame format.
+        A dictionary mapping the filenames to their corresponding "Cable selection and operating parameters" data in a DataFrame format.
         
     Example:
     --------
@@ -66,7 +66,7 @@ def PSS_data():
     #     print(f"{idx}. {file}")        
 
     # Worksheets' names
-    Worksheet_names = ['Cable selection and operating p','Temperature - current']
+    Worksheet_names = ['Cable selection and operating parameters','Temperature - current']
 
     # Extract columns A and B from the worksheets 
     Cable_info = {}
@@ -85,14 +85,14 @@ def PSS_data():
 
         # Remove the mm² from "Nominal cross section"
         df.loc[df[0] == "Nominal cross section", 1] = (
-            df.loc[df[0] == "Nominal cross section", 1].str.replace(" mm²", "").astype(int)
+            df.loc[df[0] == "Nominal cross section", 1].str.replace(" mm²", "")
         )
         
         # Compact name
         Cable_size = df.iloc[0, 1]
         Fill_factor = df.iloc[5, 1]
         Insulation_material = df.iloc[2, 1]
-        Insulation_thickness = float(df.iloc[4, 1]) - float(df.iloc[3, 1])
+        Insulation_thickness = round(float(df.iloc[4, 1]) - float(df.iloc[3, 1]),2)
         # Ambient_temperature = df.iloc[6, 1]
         Name = "{}mm2_{}fill_{}_{}_thick".format(Cable_size, Fill_factor, Insulation_material, Insulation_thickness)
 
