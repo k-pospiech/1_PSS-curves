@@ -30,13 +30,13 @@ def curve_fitting(x_list, y_list):
     0.9894x**2 + 0.0248*x + 1.0529
     """
 
-    curve_coefficients = []
+    curve_info = []
 
     for x, y in zip(x_list, y_list):
 
-        curve_type = input("Select the fit function (polynomial/exponential/logarithmic): ")
+        curve_type = input("Select (1/2/3) the fit function type ([1] polynomial/ [2] exponential/ [3] logarithmic): ")
 
-        if curve_type == "polynomial":
+        if curve_type == "1":
                 
             def curve(x, *coefficients):
                 return np.polyval(coefficients, x)
@@ -45,14 +45,14 @@ def curve_fitting(x_list, y_list):
 
             p0 = [1] * (degrees + 1)  # Initial guess
         
-        elif curve_type == "exponential":
+        elif curve_type == "2":
 
             def curve(x, a, b):
                 return a * np.exp(b * x)
             
             p0 = [1,1] # Initial guess
 
-        elif curve_type == "logarithmic":
+        elif curve_type == "3":
 
             def curve(x, a, b):
                 return a + b * np.log(x)
@@ -63,9 +63,15 @@ def curve_fitting(x_list, y_list):
             raise ValueError("Invalid curve type")
         
         params, _ = curve_fit(curve, x, y, p0=p0)
-        curve_coefficients.append(params)
+        curve_dict = {
+            'x_data': x,
+            'y_data': y,
+            'coefficients': params,
+            'curve_type': curve_type
+        }
+        curve_info.append(curve_dict)
 
-        if curve_type == "polynomial":
+        if curve_type == "1":
             terms = []
             for i, coef in enumerate(params):
                 if i == len(params) - 1: # Last term, constant
@@ -79,24 +85,25 @@ def curve_fitting(x_list, y_list):
             polynomial = polynomial.replace(" + -", " - ")
             print(polynomial)
 
-        elif curve_type == "exponential":
+        elif curve_type == "2":
             exponent = f"{params[0]:.4f} x**{params[1]:.4f}"
             print(exponent)
 
-        elif curve_type == "logarithmic":
+        elif curve_type == "3":
             logarithm = f"{params[1]:.4f} * log(x) + {params[0]:.4f}"
             logarithm = logarithm.replace(" + -", " - ")
             print(logarithm)
 
-    return curve_coefficients
+    return curve_info
 
 
-# Example usage
-x1 = np.linspace(1, 10, 10)
-y1 = 3 * x1 ** 2 + 2
-x2 = np.linspace(1, 10, 10)
-y2 = 3 * np.exp(0.3 * x2)
-x3 = np.linspace(1, 10, 10)
-y3 = 2 + 1.5 * np.log(x3)
+# # Example usage
+# x1 = np.linspace(1, 10, 10)
+# y1 = 3 * x1 ** 2 + 2
+# x2 = np.linspace(1, 10, 10)
+# y2 = 3 * np.exp(0.3 * x2)
+# x3 = np.linspace(1, 10, 10)
+# y3 = 2 + 1.5 * np.log(x3)
 
-a = curve_fitting([x1], [y1])
+# a = curve_fitting([x2], [y2])
+# print(a)
