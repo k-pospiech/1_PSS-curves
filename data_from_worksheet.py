@@ -35,3 +35,14 @@ def data_from_worksheet(folder, spreadsheet, worksheet):
         data = pd.read_csv(path)
 
     return data
+
+# # Example usage:
+
+# import pandas as pd
+
+# folder = "D:\Python_Projects\PSS-curves\Inputs"
+# spreadsheet = "0_5mm2_Correlations.xlsx"
+# worksheet = "Insulation_0"
+
+# Insulation_0mm = data_from_worksheet(folder, spreadsheet, worksheet)
+# print(type(Insulation_0mm))
