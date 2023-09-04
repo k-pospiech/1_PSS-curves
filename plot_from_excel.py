@@ -1,5 +1,22 @@
 def plot_from_excel():
+    """
+    Fetches data from an Excel worksheet and plots it using simple_plot function.
+    
+    This function will ask the user to manually select the columns with X and Y values.
+    Afterward, it plots the selected data columns. User can select multiple data columns.
+    
+    Parameters:
+    - None
+
+    Returns:
+    - None: This function only plots the data and doesn't return any value.
+    
+    Note:
+    - Make sure the data_from_worksheet and simple_plot functions are accessible.
+    - The user will interactively choose the columns for X and Y axis data.
+    """
     from data_from_worksheet import data_from_worksheet
+    from simple_plot import simple_plot
     import numpy as np
 
     folder = "D:\Python_Projects\PSS-curves\Inputs"
@@ -48,6 +65,8 @@ def plot_from_excel():
 
         more = input("Press '1' to add more data or any other key to quit: ")
 
-    print(X, Y)
+    # print(X, Y)
+
+    simple_plot(X, Y, title="Data from Excel")
 
 plot_from_excel()
